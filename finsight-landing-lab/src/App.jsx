@@ -36,9 +36,9 @@ function AnimatedHeadline() {
   )
 }
 
-const TERRAIN_WIDTH = 25
-const TERRAIN_DEPTH = 15
-const TERRAIN_OFFSET_Y = -2.2
+const TERRAIN_WIDTH = 40
+const TERRAIN_DEPTH = 20
+const TERRAIN_OFFSET_Y = -3.2
 
 function terrainHeight(x, z, time = 0) {
   const hill = (centerX, centerZ, spreadX, spreadZ, height) =>
@@ -46,30 +46,41 @@ function terrainHeight(x, z, time = 0) {
       -(((x - centerX) / spreadX) ** 2 + ((z - centerZ) / spreadZ) ** 2),
     )
 
+  // Primary far ridge — tall peaks that dominate the background
   const broadHills =
-    hill(-9.1, -4.6, 3.1, 2.4, 4.2) +
-    hill(-3.2, -6.3, 2.8, 2.2, 3.45) +
-    hill(3.3, -4.9, 3.2, 2.6, 4.6) +
-    hill(9.4, -6.6, 3.1, 2.2, 3.65) +
-    hill(-7.2, 2.1, 3.6, 2.9, 2.95) +
-    hill(0.7, 2.8, 3.7, 3.1, 2.7) +
-    hill(8.1, 2.6, 3.2, 2.8, 3.2)
-  const valleys =
-    -hill(-6.1, -1.0, 2.8, 2.2, 1.35) -
-    hill(-0.2, -1.5, 3.0, 2.3, 1.15) -
-    hill(6.1, -0.5, 2.8, 2.4, 1.25) -
-    hill(1.6, -4.0, 2.9, 1.8, 0.9)
-  const layeredWaves =
-    Math.sin(x * 0.37 + z * 0.24 + time * 0.22) * 0.42 +
-    Math.cos(x * 0.64 - z * 0.28 + time * 0.17) * 0.24 +
-    Math.sin(z * 0.68 + x * 0.17 + time * 0.13) * 0.16 +
-    Math.sin(x * 1.02 + z * 0.48 + time * 0.1) * 0.075
-  const frontSlope = -0.08 * (z + 1)
-  const wave =
-    Math.sin(x * 0.24 + z * 0.32 + time * 0.3) * 0.22 +
-    Math.cos(x * 0.18 - z * 0.25 + time * 0.21) * 0.14
+    hill(-14.5, -7.0, 4.2, 3.2, 7.8) +   // far-left peak
+    hill(-5.0,  -8.5, 3.8, 3.0, 6.4) +   // left-centre back peak
+    hill(5.2,   -7.5, 4.4, 3.4, 8.2) +   // centre-right back peak (tallest)
+    hill(14.8,  -8.0, 4.0, 3.0, 7.2) +   // far-right back peak
+    hill(-10.5,  1.2, 5.0, 4.0, 6.2) +   // mid-left secondary hill
+    hill(0.5,    1.8, 5.2, 4.2, 5.8) +   // mid-centre secondary hill
+    hill(11.0,   1.0, 4.8, 3.8, 6.6)     // mid-right secondary hill
 
-  return broadHills + valleys + layeredWaves + frontSlope + wave
+  // Foreground ridge — dark, prominent, sweeps across lower frame
+  const frontRidge =
+    hill(-16.0,  6.5, 6.0, 3.5, 5.4) +
+    hill(-4.5,   7.0, 5.5, 3.0, 4.8) +
+    hill(6.0,    6.8, 5.8, 3.2, 5.2) +
+    hill(16.5,   6.2, 5.5, 3.0, 4.6)
+
+  // Central valley carved out (keeps hero text readable)
+  const valleys =
+    -hill(-9.0, -1.2, 3.8, 3.0, 2.8) -
+    hill(-0.2,  -1.8, 4.2, 3.4, 3.2) -
+    hill(8.5,   -0.8, 3.8, 3.0, 2.6) -
+    hill(1.8,   -5.5, 3.5, 2.4, 1.8)
+
+  const layeredWaves =
+    Math.sin(x * 0.37 + z * 0.24 + time * 0.22) * 0.52 +
+    Math.cos(x * 0.64 - z * 0.28 + time * 0.17) * 0.28 +
+    Math.sin(z * 0.68 + x * 0.17 + time * 0.13) * 0.18 +
+    Math.sin(x * 1.02 + z * 0.48 + time * 0.1) * 0.08
+  const frontSlope = -0.09 * (z + 1)
+  const wave =
+    Math.sin(x * 0.24 + z * 0.32 + time * 0.3) * 0.24 +
+    Math.cos(x * 0.18 - z * 0.25 + time * 0.21) * 0.15
+
+  return broadHills + frontRidge + valleys + layeredWaves + frontSlope + wave
 }
 
 function createTerrainGeometry(segmentsX, segmentsZ) {
@@ -156,8 +167,8 @@ function TerrainScene({ reducedMotion, pointerRef }) {
   const lightRef = useRef(null)
   const { size } = useThree()
   const compact = size.width < 700
-  const segmentsX = compact ? 66 : 112
-  const segmentsZ = compact ? 34 : 52
+  const segmentsX = compact ? 80 : 140
+  const segmentsZ = compact ? 42 : 64
   const geometry = useMemo(
     () => createTerrainGeometry(segmentsX, segmentsZ),
     [segmentsX, segmentsZ],
@@ -209,51 +220,60 @@ function TerrainScene({ reducedMotion, pointerRef }) {
 
   const signals = compact
     ? [
-        [-8.8, 3.1, 'red', 1.15],
-        [-2.8, 4.3, 'red', 0.95],
-        [4.4, 3.6, 'red', 1.1],
-        [9.1, 2.4, 'red', 1.25],
+        [-9.5,  3.8, 'red',  1.1],
+        [-3.2,  5.0, 'red',  0.9],
+        [ 4.0,  4.2, 'red',  1.05],
+        [ 9.8,  3.2, 'red',  1.2],
       ]
     : [
-        [-10.1, 3.1, 'red', 1.45],
-        [-6.2, 4.5, 'red', 1.05],
-        [-2.3, 2.7, 'red', 1.2],
-        [2.2, 4.8, 'red', 0.95],
-        [6.4, 3.2, 'red', 1.35],
-        [10.2, 4.1, 'red', 1.15],
+        // Red nodes
+        [-13.5, 3.8, 'red',  1.6],
+        [-7.5,  5.2, 'red',  1.1],
+        [-2.5,  3.4, 'red',  1.3],
+        [ 3.0,  5.5, 'red',  1.0],
+        [ 8.0,  3.8, 'red',  1.45],
+        [ 13.0, 4.8, 'red',  1.2],
+        // Grey nodes — subtle depth markers
+        [-10.5, 5.8, 'grey', 0.7],
+        [-4.8,  4.0, 'grey', 0.6],
+        [ 0.5,  3.0, 'grey', 0.8],
+        [ 6.0,  5.0, 'grey', 0.55],
+        [ 11.5, 5.5, 'grey', 0.65],
+        [-16.0, 2.5, 'grey', 0.5],
+        [ 15.5, 2.0, 'grey', 0.5],
       ]
 
   return (
     <>
       <directionalLight
         ref={lightRef}
-        position={[-6, 10, 4]}
-        intensity={2.15}
+        position={[-8, 12, 6]}
+        intensity={2.4}
         color="#ffffff"
         castShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
-        shadow-camera-left={-16}
-        shadow-camera-right={16}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
+        shadow-camera-left={-22}
+        shadow-camera-right={22}
+        shadow-camera-top={14}
+        shadow-camera-bottom={-14}
         shadow-bias={-0.0002}
       />
-      <group ref={terrainRef} position={[0, TERRAIN_OFFSET_Y, 0]}>
+      <group ref={terrainRef} position={[0, TERRAIN_OFFSET_Y, compact ? 0 : 4.5]}>
         <mesh ref={meshRef} geometry={geometry} castShadow receiveShadow>
           <meshStandardMaterial
-            color="#222425"
-            roughness={0.78}
-            metalness={0.16}
+            color="#1a1c1e"
+            roughness={0.82}
+            metalness={0.14}
             side={THREE.DoubleSide}
           />
         </mesh>
         <mesh geometry={geometry} position={[0, 0.014, 0]} renderOrder={1}>
           <meshBasicMaterial
-            color="#bfc4c6"
+            color="#c0c6c9"
             wireframe
             transparent
-            opacity={0.085}
+            opacity={0.14}
             depthWrite={false}
             polygonOffset
             polygonOffsetFactor={-1}
@@ -309,7 +329,7 @@ function FinancialTerrain() {
   return (
     <div className={`terrain-3d${reducedMotion ? ' is-reduced-motion' : ''}`} aria-hidden="true">
       <Canvas
-        camera={{ position: [0, 9.2, 18], fov: 43, near: 0.1, far: 80 }}
+        camera={{ position: [0, 7.5, 16], fov: 48, near: 0.1, far: 90 }}
         frameloop={reducedMotion ? 'demand' : 'always'}
         dpr={[1, 1.35]}
         shadows
@@ -320,11 +340,11 @@ function FinancialTerrain() {
           gl.toneMapping = THREE.ACESFilmicToneMapping
           gl.shadowMap.needsUpdate = true
           camera.lookAt(0, 0.5, 0)
-          scene.fog = new THREE.Fog('#e9e9e7', 16, 36)
+          scene.fog = new THREE.Fog('#e8e8e6', 22, 52)
         }}
       >
-        <ambientLight intensity={0.72} color="#e8e9e9" />
-        <hemisphereLight args={['#ffffff', '#3b3b3b', 1.1]} />
+        <ambientLight intensity={0.45} color="#d8dadb" />
+        <hemisphereLight args={['#c8caca', '#1e1e1e', 0.7]} />
         <TerrainScene reducedMotion={reducedMotion} pointerRef={pointerRef} />
       </Canvas>
     </div>
