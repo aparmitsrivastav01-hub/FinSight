@@ -147,8 +147,6 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  transform: translateY(-45px);
-
 }
 
 .hero-brand {
@@ -326,6 +324,7 @@ body {
 .hero-description,
 .hero-cta {
   position: relative;
+  top: -45px;
   z-index: 2;
 }
 

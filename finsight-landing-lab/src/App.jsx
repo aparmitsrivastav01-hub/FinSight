@@ -4,6 +4,41 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useMemo } from 'react'
 import * as THREE from 'three'
 import './App.css'
+import FinGPT from './pages/FinGPT'
+import Analytics from './pages/Analytics'
+import Login from './pages/Login'
+import { useAuth } from './context/AuthContext'
+import WhoWeAre from './pages/WhoWeAre'
+import WhyFinSight from './pages/WhyFinSight'
+
+
+function ProtectedFinGPT() {
+  const { user, loading } = useAuth()
+
+  useEffect(() => {
+    if (!loading && !user) window.location.replace('/login')
+  }, [loading, user])
+
+  if (loading || !user) {
+    return <div className="auth-loading" role="status">Loading your workspace…</div>
+  }
+
+  return <FinGPT />
+}
+
+function ProtectedAnalytics() {
+  const { user, loading } = useAuth()
+
+  useEffect(() => {
+    if (!loading && !user) window.location.replace('/login')
+  }, [loading, user])
+
+  if (loading || !user) {
+    return <div className="auth-loading" role="status">Loading your workspace…</div>
+  }
+
+  return <Analytics />
+}
 
 function AnimatedHeadline() {
   const words = [
@@ -49,26 +84,26 @@ function terrainHeight(x, z, time = 0) {
   // Primary far ridge — tall peaks that dominate the background
   const broadHills =
     hill(-14.5, -7.0, 4.2, 3.2, 7.8) +   // far-left peak
-    hill(-5.0,  -8.5, 3.8, 3.0, 6.4) +   // left-centre back peak
-    hill(5.2,   -7.5, 4.4, 3.4, 8.2) +   // centre-right back peak (tallest)
-    hill(14.8,  -8.0, 4.0, 3.0, 7.2) +   // far-right back peak
-    hill(-10.5,  1.2, 5.0, 4.0, 6.2) +   // mid-left secondary hill
-    hill(0.5,    1.8, 5.2, 4.2, 5.8) +   // mid-centre secondary hill
-    hill(11.0,   1.0, 4.8, 3.8, 6.6)     // mid-right secondary hill
+    hill(-5.0, -8.5, 3.8, 3.0, 6.4) +   // left-centre back peak
+    hill(5.2, -7.5, 4.4, 3.4, 8.2) +   // centre-right back peak (tallest)
+    hill(14.8, -8.0, 4.0, 3.0, 7.2) +   // far-right back peak
+    hill(-10.5, 1.2, 5.0, 4.0, 6.2) +   // mid-left secondary hill
+    hill(0.5, 1.8, 5.2, 4.2, 5.8) +   // mid-centre secondary hill
+    hill(11.0, 1.0, 4.8, 3.8, 6.6)     // mid-right secondary hill
 
   // Foreground ridge — dark, prominent, sweeps across lower frame
   const frontRidge =
-    hill(-16.0,  6.5, 6.0, 3.5, 5.4) +
-    hill(-4.5,   7.0, 5.5, 3.0, 4.8) +
-    hill(6.0,    6.8, 5.8, 3.2, 5.2) +
-    hill(16.5,   6.2, 5.5, 3.0, 4.6)
+    hill(-16.0, 6.5, 6.0, 3.5, 5.4) +
+    hill(-4.5, 7.0, 5.5, 3.0, 4.8) +
+    hill(6.0, 6.8, 5.8, 3.2, 5.2) +
+    hill(16.5, 6.2, 5.5, 3.0, 4.6)
 
   // Central valley carved out (keeps hero text readable)
   const valleys =
     -hill(-9.0, -1.2, 3.8, 3.0, 2.8) -
-    hill(-0.2,  -1.8, 4.2, 3.4, 3.2) -
-    hill(8.5,   -0.8, 3.8, 3.0, 2.6) -
-    hill(1.8,   -5.5, 3.5, 2.4, 1.8)
+    hill(-0.2, -1.8, 4.2, 3.4, 3.2) -
+    hill(8.5, -0.8, 3.8, 3.0, 2.6) -
+    hill(1.8, -5.5, 3.5, 2.4, 1.8)
 
   const layeredWaves =
     Math.sin(x * 0.37 + z * 0.24 + time * 0.22) * 0.52 +
@@ -220,28 +255,28 @@ function TerrainScene({ reducedMotion, pointerRef }) {
 
   const signals = compact
     ? [
-        [-9.5,  3.8, 'red',  1.1],
-        [-3.2,  5.0, 'red',  0.9],
-        [ 4.0,  4.2, 'red',  1.05],
-        [ 9.8,  3.2, 'red',  1.2],
-      ]
+      [-9.5, 3.8, 'red', 1.1],
+      [-3.2, 5.0, 'red', 0.9],
+      [4.0, 4.2, 'red', 1.05],
+      [9.8, 3.2, 'red', 1.2],
+    ]
     : [
-        // Red nodes
-        [-13.5, 3.8, 'red',  1.6],
-        [-7.5,  5.2, 'red',  1.1],
-        [-2.5,  3.4, 'red',  1.3],
-        [ 3.0,  5.5, 'red',  1.0],
-        [ 8.0,  3.8, 'red',  1.45],
-        [ 13.0, 4.8, 'red',  1.2],
-        // Grey nodes — subtle depth markers
-        [-10.5, 5.8, 'grey', 0.7],
-        [-4.8,  4.0, 'grey', 0.6],
-        [ 0.5,  3.0, 'grey', 0.8],
-        [ 6.0,  5.0, 'grey', 0.55],
-        [ 11.5, 5.5, 'grey', 0.65],
-        [-16.0, 2.5, 'grey', 0.5],
-        [ 15.5, 2.0, 'grey', 0.5],
-      ]
+      // Red nodes
+      [-13.5, 3.8, 'red', 1.6],
+      [-7.5, 5.2, 'red', 1.1],
+      [-2.5, 3.4, 'red', 1.3],
+      [3.0, 5.5, 'red', 1.0],
+      [8.0, 3.8, 'red', 1.45],
+      [13.0, 4.8, 'red', 1.2],
+      // Grey nodes — subtle depth markers
+      [-10.5, 5.8, 'grey', 0.7],
+      [-4.8, 4.0, 'grey', 0.6],
+      [0.5, 3.0, 'grey', 0.8],
+      [6.0, 5.0, 'grey', 0.55],
+      [11.5, 5.5, 'grey', 0.65],
+      [-16.0, 2.5, 'grey', 0.5],
+      [15.5, 2.0, 'grey', 0.5],
+    ]
 
   return (
     <>
@@ -353,7 +388,18 @@ function FinancialTerrain() {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const path = window.location.pathname
 
+  if (path === '/login' || path === '/signup') {
+    return <Login />
+  }
+
+  if (path === '/fingpt') {
+    return <ProtectedFinGPT />
+  }
+  if (path === '/analytics') {
+    return <ProtectedAnalytics />
+  }
   const links = [
     { label: 'Who We Are', href: '#about' },
     { label: 'Why Choose Us', href: '#why-us' },
@@ -392,9 +438,9 @@ function App() {
             )}
           </div>
 
-          <button className="nav-template-cta">
+          <a href="/fingpt" className="nav-template-cta">
             Try FinGPT <span>↗</span>
-          </button>
+          </a>
         </div>
       </nav>
 
@@ -411,6 +457,8 @@ function App() {
           Explore FinSight <span>↗</span>
         </button>
       </section>
+      <WhoWeAre />
+      <WhyFinSight />
     </main>
   )
 }
