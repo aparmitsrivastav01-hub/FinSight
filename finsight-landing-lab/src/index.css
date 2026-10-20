@@ -1,5 +1,15 @@
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  font-family: 'DM Sans', 'Inter', sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #171819;
+  background: #fff;
+}
 
 #root {
   width: 100%;
@@ -22,6 +32,7 @@ html {
   margin: 0;
   padding: 0;
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -56,6 +67,18 @@ select {
 
 button {
   cursor: pointer;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+:where(button, a, input, textarea, select):focus-visible {
+  outline: 3px solid rgb(196 70 76 / 48%);
+  outline-offset: 3px;
 }
 
 a {

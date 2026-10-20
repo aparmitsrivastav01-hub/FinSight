@@ -36,10 +36,9 @@ Supabase persistence requires the migrations and backend environment configurati
 
 ## Run the frontend
 
-In a second PowerShell window:
+From the repository root in a second PowerShell window:
 
 ```powershell
-Set-Location 'C:\Users\C RR COMPUTERS\Desktop\AI ML\Landing Page\finsight-landing-lab'
 npm run dev
 ```
 

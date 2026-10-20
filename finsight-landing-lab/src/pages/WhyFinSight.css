@@ -74,7 +74,7 @@
   min-width: 0;
   padding: 13px 13px 40px;
   border: 1px solid rgb(24 24 25 / 8%);
-  border-radius: 70px;
+  border-radius: 38px;
   background: #f4f4f3;
   box-shadow:
     0 8px 24px rgb(0 0 0 / 2%),
@@ -89,7 +89,7 @@
   place-items: center;
   overflow: hidden;
   border: 1px solid rgb(255 255 255 / 8%);
-  border-radius: 58px;
+  border-radius: 32px;
   background:
     radial-gradient(ellipse at 50% 48%, rgb(255 255 255 / 12%), transparent 43%),
     radial-gradient(ellipse at 50% 0%, #373839 0%, transparent 73%),
@@ -261,12 +261,12 @@
     max-width: 380px;
     justify-self: center;
     padding: 12px 12px 27px;
-    border-radius: 58px;
+    border-radius: 30px;
   }
 
   .why-finsight-panel {
     min-height: 280px;
-    border-radius: 48px;
+    border-radius: 24px;
   }
 
   .why-finsight-icon-halo {

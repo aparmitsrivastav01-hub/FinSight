@@ -37,6 +37,13 @@
   text-decoration: none;
   font-size: 13px;
   background: #ffffff50;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.auth-back:hover {
+  border-color: #bdbdb9;
+  background: #fff;
+  transform: translateY(-1px);
 }
 
 .auth-layout {
@@ -143,7 +150,10 @@
   font-weight: 600;
   cursor: pointer;
   color: #333;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
+
+.auth-tabs button:hover:not(.active) { background: rgb(255 255 255 / 60%); }
 
 .auth-tabs button.active {
   background: #171819;
@@ -239,10 +249,12 @@
   font-weight: 650;
   cursor: pointer;
   margin-top: 3px;
-  transition: transform 160ms ease, background 160ms ease;
+  box-shadow: 0 7px 18px rgb(23 24 25 / 14%);
+  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
-.auth-submit:hover { background: #303133; transform: translateY(-1px); }
+.auth-submit:hover { background: #303133; transform: translateY(-1px); box-shadow: 0 10px 22px rgb(23 24 25 / 18%); }
+.auth-submit:active,.auth-google:active,.auth-tabs button:active { transform: scale(.985); }
 
 .auth-divider {
   display: flex;
@@ -277,6 +289,13 @@
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.auth-google:hover {
+  border-color: #c7c7c2;
+  background: #fff;
+  box-shadow: 0 5px 14px rgb(23 24 25 / 6%);
 }
 
 .google-g { font-size: 21px; font-weight: 800; color: #4285f4; }
@@ -334,4 +353,10 @@
   .auth-benefits p { font-size: 12px; }
   .auth-card { padding: 21px 17px; border-radius: 20px; }
   .auth-form-meta { font-size: 11px; }
+  .auth-input { min-height: 53px; }
+  .auth-submit,.auth-google { min-height: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-back,.auth-tabs button,.auth-submit,.auth-google { transition: none; }
 }

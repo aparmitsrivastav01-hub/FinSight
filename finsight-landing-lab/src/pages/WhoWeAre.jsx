@@ -1,5 +1,5 @@
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './WhoWeAre.css'
 
 const headlineWords =
@@ -11,62 +11,24 @@ const tickerCopies = [0, 1, 2]
 
 export default function WhoWeAre() {
   const sectionRef = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     const section = sectionRef.current
-    if (!section) return
-
-    let frame = 0
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const words = section.querySelectorAll('.about-headline-word')
-
-    const update = () => {
-      if (reducedMotion.matches || frame) return
-      frame = requestAnimationFrame(() => {
-        frame = 0
-        const rect = section.getBoundingClientRect()
-        const sectionStart = rect.top + window.scrollY
-        const animationDistance = Math.max(1, window.innerHeight * 0.18)
-        const progress = Math.max(0, Math.min(
-          1,
-          (window.scrollY - sectionStart) / animationDistance
-        ))
-
-        const smooth = (value) => {
-          const bounded = Math.max(0, Math.min(1, value))
-          return bounded * bounded * (3 - 2 * bounded)
-        }
-
-        words.forEach((word, index) => {
-          const reverseWordIndex = words.length - 1 - index
-          const wordStart = (reverseWordIndex / Math.max(1, words.length - 1)) * 0.8
-          const wordProgress = smooth((progress - wordStart) / 0.2)
-          word.style.setProperty('--word-tone', `${wordProgress * 100}%`)
-        })
-      })
+    if (!section || !('IntersectionObserver' in window)) {
+      setIsVisible(true)
+      return
     }
 
-    const handleMotionPreference = () => {
-      if (reducedMotion.matches) {
-        cancelAnimationFrame(frame)
-        frame = 0
-        words.forEach((word) => word.style.setProperty('--word-tone', '0%'))
-      } else {
-        update()
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true)
+        observer.disconnect()
       }
-    }
+    }, { threshold: 0.12 })
 
-    update()
-    window.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update)
-    reducedMotion.addEventListener('change', handleMotionPreference)
-
-    return () => {
-      cancelAnimationFrame(frame)
-      window.removeEventListener('scroll', update)
-      window.removeEventListener('resize', update)
-      reducedMotion.removeEventListener('change', handleMotionPreference)
-    }
+    observer.observe(section)
+    return () => observer.disconnect()
   }, [])
 
   const closeVideo = () => {
@@ -74,7 +36,11 @@ export default function WhoWeAre() {
   }
 
   return (
-    <section className="who-we-are" id="about" ref={sectionRef}>
+    <section
+      className={`who-we-are${isVisible ? ' is-visible' : ''}`}
+      id="about"
+      ref={sectionRef}
+    >
       <div className="about-intro">
         <p className="about-eyebrow">
           <span>001</span>
@@ -202,11 +168,7 @@ export default function WhoWeAre() {
             walkthrough when your recording is ready.
           </p>
         </div>
-      </dialog>
-
-      <p className="about-footnote">
-        FINANCIAL CLARITY. BETTER-INFORMED DECISIONS.
-      </p>
+      </dialog>s
     </section>
   )
 }

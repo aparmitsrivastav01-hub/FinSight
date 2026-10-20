@@ -282,13 +282,13 @@
 
 .send-button {
   display: grid;
-  flex: 0 0 40px;
-  width: 40px;
-  height: 38px;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
   margin-left: auto;
   place-items: center;
   border: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #202122;
   color: #ffffff;
   font-size: 22px;
@@ -808,6 +808,7 @@
   .sidebar-item,
   .sidebar-item>svg,
   .send-button,
+  .origin-send,
   .example-prompts button,
   .chat-composer {
     transition: none;
@@ -821,7 +822,15 @@
   background: #202122;
   border: 1px solid #303132;
   box-shadow: 0 2px 5px rgb(0 0 0 / 12%);
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
 }
+
+.origin-send:hover {
+  box-shadow: 0 7px 16px rgb(227 74 80 / 24%);
+  transform: translateY(-1px);
+}
+
+.origin-send:active { transform: scale(.96); }
 
 .origin-send-fill {
   position: absolute;
@@ -1389,10 +1398,24 @@
   }
 }
 
+@media (max-width: 420px) {
+  .fingpt-workspace { padding-right: 11px; padding-left: 11px; }
+  .terrain-workspace > .research-header { padding: 15px 11px; }
+  .research-title h2 { font-size: 14px; letter-spacing: -.45px; }
+  .company-selector { width: 100%; padding: 7px 9px; }
+  .company-details strong { font-size: 10px; }
+  .company-details small { font-size: 9px; }
+  .export-button { min-height: 40px; font-size: 11px; }
+  .terrain-workspace .chat-composer { left: 79px; right: 11px; padding: 9px; }
+  .chat-composer textarea { font-size: 12px; }
+  .send-button { flex-basis: 40px; width: 40px; height: 40px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .export-button,
   .header-avatar,
-  .profile-menu-option {
+  .profile-menu-option,
+  .origin-send {
     transition: none;
   }
 }
